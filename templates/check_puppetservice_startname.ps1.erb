@@ -1,0 +1,2 @@
+$netshOutput = wmic service where name=`"puppet`" get startname | Out-String -Stream
+if($netshOutput[2].trim() -ne ".\<%= @username %>") { exit 1 }

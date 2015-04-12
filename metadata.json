@@ -1,0 +1,14 @@
+{
+  "name": "songanbui-cta_systemcfg",
+  "version": "0.1.0",
+  "author": "songanbui",
+  "summary": "Manages test machines settings specific to CTA",
+  "license": "Apache 2.0",
+  "source": "",
+  "project_page": null,
+  "issues_url": null,
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}
+

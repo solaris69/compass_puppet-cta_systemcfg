@@ -1,0 +1,2 @@
+$slp = Get-CimInstance -ClassName SoftwareLicensingProduct | where PartialProductKey | select Name, ApplicationId, LicenseStatus 
+if($slp.LicenseStatus -ne 1) { exit 1 }
