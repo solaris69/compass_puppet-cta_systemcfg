@@ -1,6 +1,40 @@
 $server   = $env:COMPUTERNAME
 $username = "<%= username %>"
 
-$session = ((quser /server:$server | ? { $_ -match $username }) -split ' +')[2]
-if ($session -ne "console") { exit 1 } 
+$sessionName = ((quser /server:$server | ? { $_ -match $username }) -split ' +')[2]
+if ($sessionName -ne "console") { exit 1 } 
 exit 0
+
+# Legacy function
+#$server   = $env:COMPUTERNAME
+#$username = "<%= username %>"#
+
+#$queryResp = (query session /server:$c)
+#$sessions = @()
+#1..($queryResp.count -1) | % {
+#    $temp = "" | Select Computer,SessionName, Username, Id, State, Type, Device
+#    $temp.Computer = $server
+#    $temp.SessionName = $queryResp[$_].Substring(1,18).Trim()
+#    $temp.Username = $queryResp[$_].Substring(19,20).Trim()
+#    $temp.Id = $queryResp[$_].Substring(39,9).Trim()
+#    $temp.State = $queryResp[$_].Substring(48,8).Trim()
+#    $temp.Type = $queryResp[$_].Substring(56,12).Trim()
+#    $temp.Device = $queryResp[$_].Substring(68).Trim()
+#    $sessions += $temp
+#}
+#$sessions
+#ForEach($s in $sessions) {
+#    if ($s.username -eq $username -and $s.state -eq "Active") {
+#        if ($s.sessionname -eq "console") { 
+#            Write-Host "$username is logged on session 'console'. Nothing to do."
+#            exit 0
+#        }
+#        else {
+#            Write-Host "$username is logged but not on session 'console'. Redirecting console to $username..."
+#            tscon $s.id /dest:console
+#            exit 1  
+#        }
+#    }
+#}
+#Write-host "$username is not logged on."
+#exit 1

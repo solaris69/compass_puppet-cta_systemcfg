@@ -36,10 +36,31 @@ class cta_systemcfg (
       #   provider => powershell,
       # }
 
-      # Ensure session 1 is 'console' (aka default desktop session)
-      exec { 'log \'console\' session':
+      # Ensure AutoLogon is enabled
+      $logonKey = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon'
+      registry::value { 'AutoAdminLogon':
+        key  => $logonKey,
+        type => 'string',
+        data => '1',
+      }
+      registry::value { 'DefaultUserName':
+        key  => $logonKey,
+        type => 'string',
+        data => $username,
+      }
+      registry::value { 'DefaultPassword':
+        key  => $logonKey,
+        type => 'string',
+        data => $password,
+      }
+      registry_value { "${logonKey}\\AutoLogonCount":
+        ensure => absent,
+      }
+
+      # Ensure 'console' (aka active desktop) is directed on user's account session
+      exec { 'redirect \'console\' session':
         path     => $::path,
-        command  => '& tscon 1 /dest:console',
+        command  => template('cta_systemcfg/redirect_console_session.ps1.erb'),
         unless   => template('cta_systemcfg/check_current_session.ps1.erb'),
         provider => powershell,
       }
