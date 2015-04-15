@@ -1,0 +1,6 @@
+$server   = $env:COMPUTERNAME
+$username = "<%= username %>"
+
+$session = ((quser /server:$server | ? { $_ -match $username }) -split ' +')[2]
+if ($session -ne "console") { exit 1 } 
+exit 0

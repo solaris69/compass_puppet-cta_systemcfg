@@ -1,6 +1,8 @@
 class cta_systemcfg (
   $timezone   = hiera('timezone'),
   $ntpservers = hiera('ntpservers'),
+  $username   = hiera('username'),
+  $password   = hiera('password'),
 ) {
   case $::osfamily {
     'windows': {
@@ -33,6 +35,14 @@ class cta_systemcfg (
       #   unless   => template('cta_systemcfg/check_winlicense.ps1.erb'),
       #   provider => powershell,
       # }
+
+      # Ensure session 1 is 'console' (aka default desktop session)
+      exec { 'log \'console\' session':
+        path     => $::path,
+        command  => '& tscon 1 /dest:console',
+        unless   => template('cta_systemcfg/check_current_session.ps1'),
+        provider => powershell,
+      }
 
       # Ensure boot to desktop for Win 8.0
       if $::operatingsystemrelease == '8' {
