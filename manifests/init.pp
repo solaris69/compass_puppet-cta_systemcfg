@@ -40,7 +40,7 @@ class cta_systemcfg (
       exec { 'log \'console\' session':
         path     => $::path,
         command  => '& tscon 1 /dest:console',
-        unless   => template('cta_systemcfg/check_current_session.ps1'),
+        unless   => template('cta_systemcfg/check_current_session.ps1.erb'),
         provider => powershell,
       }
 
