@@ -1,8 +1,11 @@
-[main]
-server="<%= @masterserver %>"
-port=<%= @masterserverport %>
-ca="<%= @caserver %>"
-pluginsync=true
-autoflush=true
-runinterval=<%= @runinterval %>
-environment="<%= scope['::environment'] %>"
+<% if @operatingsystem == 'windows' -%>
+<%   cr = "\r" -%>
+<% end -%>
+[main]<%= cr %>
+server="<%= @masterserver %>"<%= cr %>
+port=<%= @masterserverport %><%= cr %>
+ca="<%= @caserver %>"<%= cr %>
+pluginsync=true<%= cr %>
+autoflush=true<%= cr %>
+runinterval=<%= @runinterval %><%= cr %>
+environment="<%= scope['::environment'] %>"<%= cr %>
