@@ -6,7 +6,7 @@ class cta_systemcfg (
 ) {
   case $::osfamily {
     'windows': {
-      # Power configuration
+      # Set Power configuration
       exec { 'powercfg':
         path     => $::path,
         command  => template('cta_systemcfg/powercfg.ps1'),
@@ -14,7 +14,7 @@ class cta_systemcfg (
         provider => powershell,
       }
 
-      # Time zone
+      # Set Timezone to UTC and configure NTP servers
       exec { 'set timezone':
         path     => $::path,
         command  => "& tzutil /s \"${timezone}\"",
@@ -72,6 +72,14 @@ class cta_systemcfg (
           path   => 'C:/Users/Administrator/AppData/Roaming/Microsoft/Windows/Start Menu/Programs/Startup/w8_bootToDesktopScript.scf',
           source => 'puppet:///modules/cta_systemcfg/w8_bootToDesktopScript.scf',
         }
+      }
+
+      # Disable Windows Error Reporting
+      $wer_regkey = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting'
+      registry_value { "${wer_regkey}\\Disabled":
+        ensure => present,
+        type   => 'dword',
+        data   => '1',
       }
 
     }
