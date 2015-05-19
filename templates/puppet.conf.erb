@@ -1,0 +1,11 @@
+<% if @operatingsystem == 'windows' -%>
+<%   cr = "\r" -%>
+<% end -%>
+[main]<%= cr %>
+server="<%= @masterserver %>"<%= cr %>
+port=<%= @masterserverport %><%= cr %>
+ca_server="<%= @caserver %>"<%= cr %>
+pluginsync=true<%= cr %>
+autoflush=true<%= cr %>
+runinterval=<%= @runinterval %><%= cr %>
+environment="<%= scope['::environment'] %>"<%= cr %>
