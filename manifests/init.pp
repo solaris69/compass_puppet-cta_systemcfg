@@ -82,6 +82,33 @@ class cta_systemcfg (
         data   => '1',
       }
 
+      # Disable Windows Automatic Update
+      $wau_regkey = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
+      registry_value { "${wau_regkey}\\NoAutoUpdate":
+        ensure => present,
+        type   => 'dword',
+        data   => '1',
+        notify => Exec['GPupdate for Windows Update'],
+      }
+      ->
+      registry_value { "${wau_regkey}\\AUOptions":
+        ensure => absent,
+        notify => Exec['GPupdate for Windows Update'],
+      }
+      ->
+      file { 'C:/Windows/System32/GroupPolicy/Machine':
+        ensure             => directory,
+        source             => 'puppet:///modules/cta_systemcfg/gpo/Machine',
+        recurse            => remote,
+        source_permissions => ignore,
+      }
+      ~>
+      exec { 'GPupdate for Windows Update':
+        command     => 'gpupdate /force',
+        path        => $::path,
+        refreshonly => true,
+      }
+
     }
     default: { fail("${::osfamily} is not a supported platform.") }
   }
