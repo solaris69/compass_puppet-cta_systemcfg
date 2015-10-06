@@ -82,6 +82,15 @@ class cta_systemcfg (
         data   => '1',
       }
 
+      # Disable Link-local Multicast Name Resolution
+      $llmnr_regkey = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient'
+      registry_value { "${llmnr_regkey}\\EnableMulticast":
+        ensure => present,
+        type   => 'dword',
+        data   => '0',
+        notify => Exec['GPupdate for Windows Update'],
+      }
+
       # Disable Windows Automatic Update
       $wau_regkey = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
       registry_value { "${wau_regkey}\\NoAutoUpdate":
