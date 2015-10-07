@@ -104,12 +104,10 @@ class cta_systemcfg (
         ensure => absent,
         notify => Exec['GPupdate for Windows Update'],
       }
-      ->
-      file { 'C:/Windows/System32/GroupPolicy/Machine':
-        ensure             => directory,
-        source             => 'puppet:///modules/cta_systemcfg/gpo/Machine',
-        recurse            => remote,
-        source_permissions => ignore,
+
+      # Remove any old GPO files for Machine
+      file { 'C:/Windows/System32/GroupPolicy/Machine/Registry.pol':
+        ensure             => absent,
       }
       ~>
       exec { 'GPupdate for Windows Update':
