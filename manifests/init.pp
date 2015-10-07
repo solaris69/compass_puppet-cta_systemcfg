@@ -76,14 +76,40 @@ class cta_systemcfg (
 
       # Disable Windows Error Reporting
       $wer_regkey = 'HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting'
+      registry_key { $wer_regkey:
+        ensure => present,
+      }
+      ->
       registry_value { "${wer_regkey}\\Disabled":
         ensure => present,
         type   => 'dword',
         data   => '1',
       }
 
+      # Disable Link-local Multicast Name Resolution
+      $llmnr_regkey = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient'
+      registry_key { $llmnr_regkey:
+        ensure => present,
+      }
+      ->
+      registry_value { "${llmnr_regkey}\\EnableMulticast":
+        ensure => present,
+        type   => 'dword',
+        data   => '0',
+        notify => Exec['GPupdate for Windows Update'],
+      }
+      # ~>
+      # reboot { 'reboot after disabling LLMNR':
+      #   apply   => 'finished',
+      #   message => 'Reboot after disabling LLMNR',
+      # }
+
       # Disable Windows Automatic Update
       $wau_regkey = 'HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU'
+      registry_key { $wau_regkey:
+        ensure => present,
+      }
+      ->
       registry_value { "${wau_regkey}\\NoAutoUpdate":
         ensure => present,
         type   => 'dword',
@@ -95,12 +121,10 @@ class cta_systemcfg (
         ensure => absent,
         notify => Exec['GPupdate for Windows Update'],
       }
-      ->
-      file { 'C:/Windows/System32/GroupPolicy/Machine':
-        ensure             => directory,
-        source             => 'puppet:///modules/cta_systemcfg/gpo/Machine',
-        recurse            => remote,
-        source_permissions => ignore,
+
+      # Remove GPO files for Machine. Group Policies should be managed by registry keys, and never by GPO files.
+      file { 'C:/Windows/System32/GroupPolicy/Machine/Registry.pol':
+        ensure             => absent,
       }
       ~>
       exec { 'GPupdate for Windows Update':
