@@ -121,6 +121,11 @@ class cta_systemcfg (
         ensure => absent,
         notify => Exec['GPupdate for Windows Update'],
       }
+      ->
+      service { 'wuauserv':
+        ensure => 'stopped',
+        enable => false,
+      }
 
       # Remove GPO files for Machine. Group Policies should be managed by registry keys, and never by GPO files.
       file { 'C:/Windows/System32/GroupPolicy/Machine/Registry.pol':
