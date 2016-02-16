@@ -65,6 +65,18 @@ class cta_systemcfg (
         provider => powershell,
       }
 
+      # Disable RDP connections
+      $rdp_regkey = 'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Terminal Server'
+      registry_key { $rdp_regkey:
+        ensure => present,
+      }
+      ->
+      registry_value { "${rdp_regkey}\\fDenyTSConnections":
+        ensure => present,
+        type   => 'dword',
+        data   => '1',
+      }
+
       # Ensure boot to desktop for Win 8.0
       if $::operatingsystemrelease == '8' {
         file { 'bootToDesktopWin8':
