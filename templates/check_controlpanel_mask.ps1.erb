@@ -1,0 +1,6 @@
+$key = 'HKCU:\Control Panel\Desktop'
+$entry = (Get-ItemProperty -Path $key -Name 'UserPreferencesMask' -ErrorAction SilentlyContinue)
+$expected = ([byte[]] (0x90,0x12,0x01,0x80,0x10,0x00,0x00,0x00))
+$differences = Compare-Object $entry.'UserPreferencesMask' $expected
+# if $differences is null, then $expected is equal to registry
+if($differences -ne $null) { exit 1 }

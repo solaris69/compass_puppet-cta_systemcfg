@@ -1,0 +1,4 @@
+$key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects'
+New-Item -Path $key -force
+Set-ItemProperty -Path $key -Name VisualFXSetting -Value 2 -ErrorAction SilentlyContinue
+exit 0

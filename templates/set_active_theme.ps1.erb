@@ -1,0 +1,4 @@
+$key = 'HKCU:\Software\Microsoft\Windows\CurrentVersion\ThemeManager'
+New-Item -Path $key -force
+Set-ItemProperty -Path $key -Name ThemeActive -Value <%= @active_theme %> -ErrorAction SilentlyContinue
+exit 0
