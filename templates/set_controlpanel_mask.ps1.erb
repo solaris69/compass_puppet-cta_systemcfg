@@ -1,0 +1,4 @@
+$key = 'HKCU:\Control Panel\Desktop'
+New-Item -Path $key -force
+Set-ItemProperty -Path $key -Name UserPreferencesMask -Value ([byte[]] (0x90,0x12,0x01,0x80,0x10,0x00,0x00,0x00)) -ErrorAction SilentlyContinue
+exit 0

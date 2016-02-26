@@ -3,6 +3,7 @@ class cta_systemcfg (
   $ntpservers = hiera('ntpservers'),
   $username   = hiera('username'),
   $password   = hiera('password'),
+  $active_theme = hiera('active_theme'),
 ) {
   case $::osfamily {
     'windows': {
@@ -76,6 +77,31 @@ class cta_systemcfg (
         type   => 'dword',
         data   => '1',
       }
+
+      ## Set Visual Effects settings performance to Best
+      exec { 'set VisualFXSetting to Best Performance':
+        path     => $::path,
+        command  => template('cta_systemcfg/set_visual_perf_registry.ps1.erb'),
+        unless   => template('cta_systemcfg/check_visual_perf_registry.ps1.erb'),
+        provider => powershell,
+      }
+
+      exec { 'set UserPreferencesMask to Best Performance':
+        path     => $::path,
+        command  => template('cta_systemcfg/set_controlpanel_mask.ps1.erb'),
+        unless   => template('cta_systemcfg/check_controlpanel_mask.ps1.erb'),
+        provider => powershell,
+      }
+
+      # # Set Active Theme to Classic (0) for Win 7
+      # if $::operatingsystemrelease == '7' {
+      #   exec { 'set current Active Theme':
+      #     path     => $::path,
+      #     command  => template('cta_systemcfg/set_active_theme.ps1.erb'),
+      #     unless   => template('cta_systemcfg/check_active_theme.ps1.erb'),
+      #     provider => powershell,
+      #   }
+      # }
 
       # Ensure boot to desktop for Win 8.0
       if $::operatingsystemrelease == '8' {
