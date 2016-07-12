@@ -46,7 +46,7 @@ class cta_systemcfg::puppetservice (
           command  => "& sc.exe config puppet obj= \".\\${username}\" password= \"${password}\"",
           unless   => template('cta_systemcfg/check_puppetservice_startname.ps1.erb'),
           require  => Local_security_policy['Log on as a service'],
-          provider => powershell,
+#          provider => powershell,
         }
         ~>
         reboot { 'reboot after puppet service configuration':
