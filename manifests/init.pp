@@ -9,11 +9,11 @@ class cta_systemcfg (
     'windows': {
       # Set Power configuration
       exec { 'powercfg':
-        path     => $::path,
-#        command  => template('cta_systemcfg/powercfg.ps1'),
-#        unless   => template('cta_systemcfg/check_powercfg.ps1'),
-        command  => file('cta_systemcfg/powercfg.ps1'),
-        unless   => file('cta_systemcfg/check_powercfg.ps1'),
+#        path     => $::path,
+        command  => template('cta_systemcfg/powercfg.ps1'),
+        unless   => template('cta_systemcfg/check_powercfg.ps1'),
+#        command  => file('cta_systemcfg/powercfg.ps1'),
+#        unless   => file('cta_systemcfg/check_powercfg.ps1'),
         provider => powershell,
       }
 
