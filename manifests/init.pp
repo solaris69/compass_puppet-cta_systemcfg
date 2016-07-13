@@ -64,9 +64,8 @@ class cta_systemcfg (
       }
 
       # Ensure 'console' (aka active desktop) is directed on user's account session
-      file { 'c:/vc': ensure => directory } ->
-      file{ 'c:/vc/redirect_console_session.ps1': ensure => file, content => template('cta_systemcfg/redirect_console_session.ps1.erb')} ->
-      file{ 'c:/vc/check_current_session.ps1': ensure => file, content => template('cta_systemcfg/check_current_session.ps1.erb')} ->
+      file{ 'c:/vc/redirect_console_session.ps1': ensure => file, content => template('cta_systemcfg/redirect_console_session.ps1.erb'), require => File['c:/vc']} ->
+      file{ 'c:/vc/check_current_session.ps1': ensure => file, content => template('cta_systemcfg/check_current_session.ps1.erb'), require => File['c:/vc']} ->
       exec { 'redirect \'console\' session':
 #        path     => $::path,
         command  => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/redirect_console_session.ps1',
@@ -87,9 +86,8 @@ class cta_systemcfg (
       }
 
       ## Set Visual Effects settings performance to Best
-      file { 'c:/vc': ensure => directory } ->
-      file{ 'c:/vc/set_visual_perf_registry.ps1': ensure => file, content => template('cta_systemcfg/set_visual_perf_registry.ps1.erb')} ->
-      file{ 'c:/vc/check_visual_perf_registry.ps1': ensure => file, content => template('cta_systemcfg/check_visual_perf_registry.ps1.erb')} ->
+      file{ 'c:/vc/set_visual_perf_registry.ps1': ensure => file, content => template('cta_systemcfg/set_visual_perf_registry.ps1.erb'), require => File['c:/vc']} ->
+      file{ 'c:/vc/check_visual_perf_registry.ps1': ensure => file, content => template('cta_systemcfg/check_visual_perf_registry.ps1.erb'), require => File['c:/vc']} ->
       exec { 'set VisualFXSetting to Best Performance':
 #        path     => $::path,
         command  => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/set_visual_perf_registry.ps1',
@@ -97,9 +95,8 @@ class cta_systemcfg (
 #        provider => powershell,
       }
 
-      file { 'c:/vc': ensure => directory } ->
-      file{ 'c:/vc/set_controlpanel_mask.ps1': ensure => file, content => template('cta_systemcfg/set_controlpanel_mask.ps1.erb')} ->
-      file{ 'c:/vc/check_controlpanel_mask.ps1': ensure => file, content => template('cta_systemcfg/check_controlpanel_mask.ps1.erb')} ->
+      file{ 'c:/vc/set_controlpanel_mask.ps1': ensure => file, content => template('cta_systemcfg/set_controlpanel_mask.ps1.erb'), require => File['c:/vc']} ->
+      file{ 'c:/vc/check_controlpanel_mask.ps1': ensure => file, content => template('cta_systemcfg/check_controlpanel_mask.ps1.erb'), require => File['c:/vc']} ->
       exec { 'set UserPreferencesMask to Best Performance':
 #        path     => $::path,
         command  => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/set_controlpanel_mask.ps1',
