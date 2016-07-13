@@ -70,7 +70,7 @@ class cta_systemcfg (
 #        path     => $::path,
         command  => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/redirect_console_session.ps1',
         unless   => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/check_current_session.ps1',
-        provider => powershell,
+#        provider => powershell,
       }
 
       # Disable RDP connections
