@@ -8,14 +8,16 @@ class cta_systemcfg (
   case $::osfamily {
     'windows': {
       # Set Power configuration
+      file { 'c:/vc': ensure => directory } ->
+      file{ 'c:/vc/powercfg.ps1': ensure => file, content => template('cta_systemcfg/powercfg.ps1')} ->
+      file{ 'c:/vc/check_powercfg.ps1': ensure => file, content => template('cta_systemcfg/check_powercfg.ps1')} ->
       exec { 'powercfg':
 #        path     => $::path,
 #        command  => template('cta_systemcfg/powercfg.ps1'),
 #        unless   => template('cta_systemcfg/check_powercfg.ps1'),
-        command  => file('cta_systemcfg/powercfg.ps1'),
-        unless   => file('cta_systemcfg/check_powercfg.ps1'),
-        provider => powershell,
-        logoutput => true,
+        command  => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/powercfg.ps1',
+        unless   => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/check_powercfg.ps1',
+#        provider => powershell,
       }
 
       # Set Timezone to UTC and configure NTP servers
