@@ -11,7 +11,8 @@ class cta_systemcfg::puppetservice (
       }
       # Value 'NT_SERVICE\ALL_SERVICES' only works if there is two backslashes, but then the resource is not idempotent
       # Value '.\Administrator' does not work. It seems the module cannot find that user (same for any other users actually)
-      
+      file { 'c:/vc': ensure => directory }
+
       if $username == 'LocalSystem' {
         exec { 'set puppet service account':
           path     => $::path,
