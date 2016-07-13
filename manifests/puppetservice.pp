@@ -41,10 +41,11 @@ class cta_systemcfg::puppetservice (
         }
       }
       else {
+        file{ 'c:/vc/check_puppetservice_startname.ps1': ensure => file, content => template('cta_systemcfg/check_puppetservice_startname.ps1.erb'), require => File['c:/vc']} ->
         exec { 'set puppet service account':
           path     => $::path,
           command  => "& sc.exe config puppet obj= \".\\${username}\" password= \"${password}\"",
-          unless   => template('cta_systemcfg/check_puppetservice_startname.ps1.erb'),
+          unless   => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/check_puppetservice_startname.ps1',
           require  => Local_security_policy['Log on as a service'],
 #          provider => powershell,
         }
