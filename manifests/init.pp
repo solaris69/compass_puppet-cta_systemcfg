@@ -64,12 +64,14 @@ class cta_systemcfg (
       }
 
       # Ensure 'console' (aka active desktop) is directed on user's account session
+      file { 'c:/vc': ensure => directory } ->
+      file{ 'c:/vc/redirect_console_session.ps1': ensure => file, content => template('cta_systemcfg/redirect_console_session.ps1.erb')} ->
+      file{ 'c:/vc/check_current_session.ps1': ensure => file, content => template('cta_systemcfg/check_current_session.ps1.erb')} ->
       exec { 'redirect \'console\' session':
 #        path     => $::path,
-        command  => template('cta_systemcfg/redirect_console_session.ps1.erb'),
-        unless   => template('cta_systemcfg/check_current_session.ps1.erb'),
+        command  => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/redirect_console_session.ps1',
+        unless   => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/check_current_session.ps1',
         provider => powershell,
-        logoutput => true,
       }
 
       # Disable RDP connections
@@ -85,20 +87,24 @@ class cta_systemcfg (
       }
 
       ## Set Visual Effects settings performance to Best
+      file { 'c:/vc': ensure => directory } ->
+      file{ 'c:/vc/set_visual_perf_registry.ps1': ensure => file, content => template('cta_systemcfg/set_visual_perf_registry.ps1.erb')} ->
+      file{ 'c:/vc/check_visual_perf_registry.ps1': ensure => file, content => template('cta_systemcfg/check_visual_perf_registry.ps1.erb')} ->
       exec { 'set VisualFXSetting to Best Performance':
-        path     => $::path,
-        command  => template('cta_systemcfg/set_visual_perf_registry.ps1.erb'),
-        unless   => template('cta_systemcfg/check_visual_perf_registry.ps1.erb'),
-        provider => powershell,
-        logoutput => true,
+#        path     => $::path,
+        command  => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/set_visual_perf_registry.ps1',
+        unless   => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/check_visual_perf_registry.ps1',
+#        provider => powershell,
       }
 
+      file { 'c:/vc': ensure => directory } ->
+      file{ 'c:/vc/set_controlpanel_mask.ps1': ensure => file, content => template('cta_systemcfg/set_controlpanel_mask.ps1.erb')} ->
+      file{ 'c:/vc/check_controlpanel_mask.ps1': ensure => file, content => template('cta_systemcfg/check_controlpanel_mask.ps1.erb')} ->
       exec { 'set UserPreferencesMask to Best Performance':
-        path     => $::path,
-        command  => template('cta_systemcfg/set_controlpanel_mask.ps1.erb'),
-        unless   => template('cta_systemcfg/check_controlpanel_mask.ps1.erb'),
-        provider => powershell,
-        logoutput => true,
+#        path     => $::path,
+        command  => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/set_controlpanel_mask.ps1',
+        unless   => 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -Executionpolicy Unrestricted -File c:/vc/check_controlpanel_mask.ps1',
+#        provider => powershell,
       }
 
       # # Set Active Theme to Classic (0) for Win 7
