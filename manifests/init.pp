@@ -20,11 +20,13 @@ class cta_systemcfg (
 #        provider => powershell,
       }
 
+      $powershell='C:\\windows\\system32\\WindowsPowerShell\\v1.0\\powershell.exe -ExecutionPolicy RemoteSigned -Command'
       # Set Timezone to UTC and configure NTP servers
       exec { 'set timezone':
         path     => $::path,
         command  => "& tzutil /s \"${timezone}\"",
-        unless   => "if ($(tzutil /g) -ne '${timezone}') { exit 1 }",
+        unless   => "${powershell} \"if ($(tzutil /g) -ne '${timezone}') { exit 1 }\"",
+#        unless   => "if ($(tzutil /g) -ne '${timezone}') { exit 1 }",
 #        provider => powershell,
       }
       ->
