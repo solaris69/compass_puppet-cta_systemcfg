@@ -10,11 +10,12 @@ class cta_systemcfg (
       # Set Power configuration
       exec { 'powercfg':
 #        path     => $::path,
-        command  => template('cta_systemcfg/powercfg.ps1'),
-        unless   => template('cta_systemcfg/check_powercfg.ps1'),
-#        command  => file('cta_systemcfg/powercfg.ps1'),
-#        unless   => file('cta_systemcfg/check_powercfg.ps1'),
+#        command  => template('cta_systemcfg/powercfg.ps1'),
+#        unless   => template('cta_systemcfg/check_powercfg.ps1'),
+        command  => file('cta_systemcfg/powercfg.ps1'),
+        unless   => file('cta_systemcfg/check_powercfg.ps1'),
         provider => powershell,
+        logoutput => true,
       }
 
       # Set Timezone to UTC and configure NTP servers
@@ -62,10 +63,11 @@ class cta_systemcfg (
 
       # Ensure 'console' (aka active desktop) is directed on user's account session
       exec { 'redirect \'console\' session':
-        path     => $::path,
+#        path     => $::path,
         command  => template('cta_systemcfg/redirect_console_session.ps1.erb'),
         unless   => template('cta_systemcfg/check_current_session.ps1.erb'),
         provider => powershell,
+        logoutput => true,
       }
 
       # Disable RDP connections
@@ -86,6 +88,7 @@ class cta_systemcfg (
         command  => template('cta_systemcfg/set_visual_perf_registry.ps1.erb'),
         unless   => template('cta_systemcfg/check_visual_perf_registry.ps1.erb'),
         provider => powershell,
+        logoutput => true,
       }
 
       exec { 'set UserPreferencesMask to Best Performance':
@@ -93,6 +96,7 @@ class cta_systemcfg (
         command  => template('cta_systemcfg/set_controlpanel_mask.ps1.erb'),
         unless   => template('cta_systemcfg/check_controlpanel_mask.ps1.erb'),
         provider => powershell,
+        logoutput => true,
       }
 
       # # Set Active Theme to Classic (0) for Win 7
