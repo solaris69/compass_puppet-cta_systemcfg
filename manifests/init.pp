@@ -8,9 +8,10 @@ class cta_systemcfg (
   case $::osfamily {
     'windows': {
       # Set Power configuration
-      file { 'c:/vc': ensure => directory } ->
-      file{ 'c:/vc/powercfg.ps1': ensure => file, content => template('cta_systemcfg/powercfg.ps1')} ->
-      file{ 'c:/vc/check_powercfg.ps1': ensure => file, content => template('cta_systemcfg/check_powercfg.ps1')} ->
+      file { 'c:/vc': ensure => directory }
+
+      file{ 'c:/vc/powercfg.ps1': ensure => file, content => template('cta_systemcfg/powercfg.ps1'), require => File['c:/vc']} ->
+      file{ 'c:/vc/check_powercfg.ps1': ensure => file, content => template('cta_systemcfg/check_powercfg.ps1'), require => File['c:/vc']} ->
       exec { 'powercfg':
 #        path     => $::path,
 #        command  => template('cta_systemcfg/powercfg.ps1'),
